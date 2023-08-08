@@ -107,6 +107,22 @@ namespace nnsResolver
             return "";
         }
 
+        public static void ClearReverseRecord(UInt160 owner)
+        {
+            StorageContext context = Storage.CurrentContext;
+            StorageMap reverseMap = new(context, Prefix_ReverseRecord);
+            string address = owner.ToAddress(Runtime.AddressVersion);
+            string name = GetReverseRecord(owner);
+            if (name != "")
+            {
+                reverseMap.Delete(address);
+            }
+            else
+            {
+                ExecutionEngine.Assert(false, "name is not exist.");
+            }
+        }
+
         public static void Update(ByteString nefFile, string manifest)
         {
             ExecutionEngine.Assert(Runtime.CheckWitness(Owner()));
